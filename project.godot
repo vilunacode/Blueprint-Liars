@@ -1,0 +1,25 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Bauverrat"
+run/main_scene="res://scenes/main/Main.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+
+[autoload]
+
+NetworkManager="*res://autoload/NetworkManager.gd"
+GameState="*res://autoload/GameState.gd"
+SessionData="*res://autoload/SessionData.gd"
+
+[physics]
+
+common/physics_ticks_per_second=60
