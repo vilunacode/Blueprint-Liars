@@ -5,7 +5,7 @@
 ; Format:
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
-
+Wi
 config_version=5
 
 [application]
