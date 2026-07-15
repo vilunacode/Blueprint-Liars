@@ -3,7 +3,7 @@ extends Node
 ## Phasen-Statemachine der Runde. Nur der Host wechselt aktiv die Phase;
 ## Clients folgen der autoritativen RPC.
 
-enum Phase { LOBBY, BUILD, REVEAL, STRESSTEST, SCORING }
+enum Phase { LOBBY, BUILD, REVEAL, VOTING, STRESSTEST, SCORING }
 
 signal phase_changed(new_phase: Phase)
 
@@ -41,3 +41,9 @@ func request_reveal() -> void:
 	if not multiplayer.is_server():
 		return
 	_set_phase.rpc(Phase.REVEAL)
+
+
+func request_voting() -> void:
+	if not multiplayer.is_server():
+		return
+	_set_phase.rpc(Phase.VOTING)

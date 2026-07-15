@@ -30,3 +30,14 @@ offset_right = -20.0
 offset_bottom = 60.0
 horizontal_alignment = 1
 text = "Aufdeckungsphase"
+
+[node name="TimeLabel" type="Label" parent="UI"]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = 90.0
+horizontal_alignment = 1
+text = "00:30"

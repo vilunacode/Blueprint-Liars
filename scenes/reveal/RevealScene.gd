@@ -6,22 +6,41 @@ extends Node3D
 
 const SLOT_SCENE := preload("res://scenes/build/Slot.tscn")
 const ORBIT_SPEED_DEGREES := 12.0
+const REVEAL_DURATION_SECONDS := 30.0
 
 @onready var slots_container: Node3D = $Slots
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var info_label: Label = $UI/InfoLabel
+@onready var time_label: Label = $UI/TimeLabel
 
 var slots_by_id: Dictionary = {}  # StringName -> Slot-Node
+var remaining_time: float = REVEAL_DURATION_SECONDS
 
 
 func _ready() -> void:
 	get_viewport().physics_object_picking = true
 	info_label.text = "Aufdeckungsphase - klicke verdächtige Stellen an, um sie zu markieren"
 	_spawn_result_slots()
+	remaining_time = REVEAL_DURATION_SECONDS
+	_update_time_label()
 
 
 func _process(delta: float) -> void:
 	camera_pivot.rotate_y(deg_to_rad(ORBIT_SPEED_DEGREES) * delta)
+	if remaining_time <= 0.0:
+		return
+	remaining_time = max(0.0, remaining_time - delta)
+	_update_time_label()
+	if remaining_time <= 0.0 and multiplayer.is_server():
+		GameState.request_voting()
+
+
+func _update_time_label() -> void:
+	if remaining_time <= 0.0:
+		time_label.text = "Zeit für Abstimmung!"
+		return
+	var total_seconds := int(ceil(remaining_time))
+	time_label.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 
 
 func _spawn_result_slots() -> void:
