@@ -44,3 +44,16 @@ func _apply_blueprint(blueprint_path: String, is_liar: bool) -> void:
 	my_blueprint = load(blueprint_path)
 	am_i_liar = is_liar
 	role_assigned.emit(is_liar, my_blueprint)
+
+
+func get_hand_counts_for_peer(peer_id: int) -> Dictionary:
+	# Host-only: berechnet deterministisch (ohne Netzwerk-Roundtrip), was ein
+	# Peer laut seiner zugewiesenen Blueprint-Variante in der Hand haben sollte -
+	# damit der Host Platzierungs-Anfragen gegen die tatsächliche Hand validieren kann.
+	var path := LIAR_BLUEPRINT_PATH if peer_id == liar_peer_id else HONEST_BLUEPRINT_PATH
+	var blueprint: Blueprint = load(path)
+	var counts: Dictionary = {}
+	for slot_definition in blueprint.slots:
+		var part_id: StringName = slot_definition.expected_part_id
+		counts[part_id] = counts.get(part_id, 0) + 1
+	return counts
