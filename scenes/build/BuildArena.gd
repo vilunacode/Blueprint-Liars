@@ -1,15 +1,20 @@
 extends Node3D
 
 const SLOT_SCENE := preload("res://scenes/build/Slot.tscn")
+const BUILD_DURATION_SECONDS := 180.0
+const INSPECTION_COST_SECONDS := 5.0
 
 @onready var slots_container: Node3D = $Slots
 @onready var info_label: Label = $UI/VBoxContainer/InfoLabel
 @onready var back_button: Button = $UI/VBoxContainer/BackButton
 @onready var hand_container: HBoxContainer = $UI/HandContainer
+@onready var time_label: Label = $UI/TimeLabel
 
 var slots_by_id: Dictionary = {}  # StringName -> Slot-Node
 var hand_counts: Dictionary = {}  # StringName -> int, rein lokal/optisch
 var selected_part_id: StringName = &""
+var inspected_part_ids: Dictionary = {}  # StringName -> bool, rein lokal/optisch
+var remaining_time: float = BUILD_DURATION_SECONDS
 
 var filled_slots: Dictionary = {}  # StringName -> StringName, Host-autoritativ
 var peer_hand_counts: Dictionary = {}  # int (peer_id) -> Dictionary, Host-autoritativ
@@ -22,6 +27,23 @@ func _ready() -> void:
 	_spawn_slots()
 	_build_hand()
 	_update_info_label()
+	remaining_time = BUILD_DURATION_SECONDS
+	_update_time_label()
+
+
+func _process(delta: float) -> void:
+	if remaining_time <= 0.0:
+		return
+	remaining_time = max(0.0, remaining_time - delta)
+	_update_time_label()
+
+
+func _update_time_label() -> void:
+	if remaining_time <= 0.0:
+		time_label.text = "Zeit abgelaufen!"
+		return
+	var total_seconds := int(ceil(remaining_time))
+	time_label.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 
 
 func _spawn_slots() -> void:
@@ -56,16 +78,41 @@ func _refresh_hand_ui() -> void:
 		if count <= 0:
 			continue
 		var part: PartData = PartLibrary.get_part(part_id)
-		var button := Button.new()
-		button.text = "%s x%d" % [part.display_name, count]
-		button.toggle_mode = true
-		button.button_group = group
-		button.pressed.connect(_on_hand_button_pressed.bind(part_id))
-		hand_container.add_child(button)
+
+		var item_box := HBoxContainer.new()
+
+		var label_text := "%s x%d" % [part.display_name, count]
+		if inspected_part_ids.get(part_id, false):
+			label_text += " (%.2fm)" % part.size.x
+		var select_button := Button.new()
+		select_button.text = label_text
+		select_button.toggle_mode = true
+		select_button.button_group = group
+		select_button.pressed.connect(_on_hand_button_pressed.bind(part_id))
+		item_box.add_child(select_button)
+
+		var inspect_button := Button.new()
+		inspect_button.text = "Prüfen"
+		inspect_button.disabled = inspected_part_ids.get(part_id, false)
+		inspect_button.pressed.connect(_on_inspect_pressed.bind(part_id))
+		item_box.add_child(inspect_button)
+
+		hand_container.add_child(item_box)
 
 
 func _on_hand_button_pressed(part_id: StringName) -> void:
 	selected_part_id = part_id
+
+
+func _on_inspect_pressed(part_id: StringName) -> void:
+	# Deckt die tatsächliche Größe eines Teils auf - kostet Zeit vom Bau-Timer,
+	# das ist die Risiko/Nutzen-Abwägung aus dem Spielkonzept.
+	if inspected_part_ids.get(part_id, false):
+		return
+	inspected_part_ids[part_id] = true
+	remaining_time = max(0.0, remaining_time - INSPECTION_COST_SECONDS)
+	_update_time_label()
+	_refresh_hand_ui()
 
 
 func _on_slot_clicked(slot: Node3D) -> void:
