@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.3", "Forward Plus")
 NetworkManager="*res://autoload/NetworkManager.gd"
 GameState="*res://autoload/GameState.gd"
 SessionData="*res://autoload/SessionData.gd"
+RoleManager="*res://autoload/RoleManager.gd"
 
 [physics]
 

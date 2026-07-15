@@ -20,6 +20,11 @@ func request_start_game() -> void:
 	# Nur der Host darf die Runde tatsächlich starten.
 	if not multiplayer.is_server():
 		return
+	# Rollenvergabe muss vor dem Phasenwechsel abgeschlossen sein: beide laufen
+	# reliable/geordnet über denselben Kanal pro Peer, die Blueprint-RPC kommt
+	# also vor der Phasen-RPC an - auf diese Reihenfolge verlässt sich die
+	# BuildArena beim Anzeigen der Rolle.
+	RoleManager.assign_roles()
 	_set_phase.rpc(Phase.BUILD)
 
 
