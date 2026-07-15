@@ -32,3 +32,12 @@ func request_return_to_lobby() -> void:
 	if not multiplayer.is_server():
 		return
 	_set_phase.rpc(Phase.LOBBY)
+
+
+func request_reveal() -> void:
+	# Nur der Host darf auslösen - der Host-Timer ist die autoritative Uhr
+	# für den Phasenübergang, auch wenn jeder Client seinen Countdown rein
+	# lokal anzeigt (siehe BuildArena).
+	if not multiplayer.is_server():
+		return
+	_set_phase.rpc(Phase.REVEAL)

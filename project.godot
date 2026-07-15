@@ -21,6 +21,7 @@ GameState="*res://autoload/GameState.gd"
 SessionData="*res://autoload/SessionData.gd"
 RoleManager="*res://autoload/RoleManager.gd"
 PartLibrary="*res://autoload/PartLibrary.gd"
+BuildResult="*res://autoload/BuildResult.gd"
 
 [physics]
 

@@ -42,6 +42,24 @@ func show_placed_part(part: PartData) -> void:
 	_apply_visual(part, false)
 
 
+func mark_pinged() -> void:
+	if has_node("PingMarker"):
+		return
+	var marker := MeshInstance3D.new()
+	marker.name = "PingMarker"
+	var sphere := SphereMesh.new()
+	sphere.radius = 0.08
+	sphere.height = 0.16
+	marker.mesh = sphere
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(1, 0.2, 0.2)
+	material.emission_enabled = true
+	material.emission = Color(1, 0.2, 0.2)
+	marker.material_override = material
+	marker.position = Vector3.UP * 0.3
+	add_child(marker)
+
+
 func _apply_visual(part: PartData, is_ghost: bool) -> void:
 	var box := BoxMesh.new()
 	box.size = part.size

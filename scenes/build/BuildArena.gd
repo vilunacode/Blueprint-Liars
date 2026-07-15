@@ -24,6 +24,7 @@ func _ready() -> void:
 	get_viewport().physics_object_picking = true
 	back_button.pressed.connect(_on_back_pressed)
 	back_button.visible = multiplayer.is_server()
+	BuildResult.reset()
 	_spawn_slots()
 	_build_hand()
 	_update_info_label()
@@ -36,6 +37,8 @@ func _process(delta: float) -> void:
 		return
 	remaining_time = max(0.0, remaining_time - delta)
 	_update_time_label()
+	if remaining_time <= 0.0 and multiplayer.is_server():
+		GameState.request_reveal()
 
 
 func _update_time_label() -> void:
@@ -157,6 +160,7 @@ func _handle_place_request(sender_id: int, slot_id: StringName, part_id: StringN
 @rpc("authority", "call_local", "reliable")
 func _broadcast_placement(slot_id: StringName, part_id: StringName) -> void:
 	filled_slots[slot_id] = part_id
+	BuildResult.record_placement(slot_id, part_id)
 	var slot: Node3D = slots_by_id.get(slot_id)
 	if slot == null:
 		return
