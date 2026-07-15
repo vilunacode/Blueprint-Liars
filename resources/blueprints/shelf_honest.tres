@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="Blueprint" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/Blueprint.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/SlotDefinition.gd" id="2"]
+
+[sub_resource type="Resource" id="1"]
+script = ExtResource("2")
+id = &"slot_side_left"
+expected_part_id = &"side_panel"
+local_position = Vector3(-0.5, 0.8, 0)
+connected_slot_ids = [&"slot_board_bottom", &"slot_board_middle", &"slot_board_top", &"slot_back_panel"]
+
+[sub_resource type="Resource" id="2"]
+script = ExtResource("2")
+id = &"slot_side_right"
+expected_part_id = &"side_panel"
+local_position = Vector3(0.5, 0.8, 0)
+connected_slot_ids = [&"slot_board_bottom", &"slot_board_middle", &"slot_board_top", &"slot_back_panel"]
+
+[sub_resource type="Resource" id="3"]
+script = ExtResource("2")
+id = &"slot_board_bottom"
+expected_part_id = &"shelf_board"
+local_position = Vector3(0, 0.1, 0)
+connected_slot_ids = [&"slot_side_left", &"slot_side_right"]
+
+[sub_resource type="Resource" id="4"]
+script = ExtResource("2")
+id = &"slot_board_middle"
+expected_part_id = &"shelf_board"
+local_position = Vector3(0, 0.8, 0)
+connected_slot_ids = [&"slot_side_left", &"slot_side_right"]
+
+[sub_resource type="Resource" id="5"]
+script = ExtResource("2")
+id = &"slot_board_top"
+expected_part_id = &"shelf_board"
+local_position = Vector3(0, 1.5, 0)
+connected_slot_ids = [&"slot_side_left", &"slot_side_right"]
+
+[sub_resource type="Resource" id="6"]
+script = ExtResource("2")
+id = &"slot_back_panel"
+expected_part_id = &"back_panel"
+local_position = Vector3(0, 0.8, -0.175)
+connected_slot_ids = [&"slot_side_left", &"slot_side_right"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Regal (ehrlich)"
+slots = [SubResource("1"), SubResource("2"), SubResource("3"), SubResource("4"), SubResource("5"), SubResource("6")]
