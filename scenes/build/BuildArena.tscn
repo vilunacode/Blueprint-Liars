@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/build/BuildArena.gd" id="1"]
+
+[node name="BuildArena" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0, 1.8, 3.5)
+rotation_degrees = Vector3(-20, 0, 0)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-45, -30, 0)
+
+[node name="Slots" type="Node3D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -100.0
+offset_right = 400.0
+offset_bottom = -20.0
+grow_vertical = 0
+
+[node name="InfoLabel" type="Label" parent="UI/VBoxContainer"]
+layout_mode = 2
+text = "Rolle: ..."
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="UI/VBoxContainer"]
+layout_mode = 2
+text = "Zurück zur Lobby (nur Host)"

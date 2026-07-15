@@ -1,7 +1,7 @@
 extends Node
 
 const LOBBY_SCENE := preload("res://scenes/lobby/Lobby.tscn")
-const BUILD_PLACEHOLDER_SCENE := preload("res://scenes/build/BuildPlaceholder.tscn")
+const BUILD_ARENA_SCENE := preload("res://scenes/build/BuildArena.tscn")
 
 @onready var current_scene_holder: Node = $CurrentScene
 
@@ -16,7 +16,7 @@ func _on_phase_changed(new_phase: GameState.Phase) -> void:
 		GameState.Phase.LOBBY:
 			_show_scene(LOBBY_SCENE)
 		GameState.Phase.BUILD:
-			_show_scene(BUILD_PLACEHOLDER_SCENE)
+			_show_scene(BUILD_ARENA_SCENE)
 		GameState.Phase.REVEAL, GameState.Phase.STRESSTEST, GameState.Phase.SCORING:
 			pass  # folgt in Schritt 9+ (RevealCamera, StresstestRig, Scoring-UI)
 
